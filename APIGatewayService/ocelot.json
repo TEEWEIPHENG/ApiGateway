@@ -9,7 +9,7 @@
           "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "/cybertip/login/{everything}",
+      "UpstreamPathTemplate": "/api/Login/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
     {
@@ -21,7 +21,7 @@
           "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "/cybertip/register/{everything}",
+      "UpstreamPathTemplate": "/api/Register/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     }
   ],
