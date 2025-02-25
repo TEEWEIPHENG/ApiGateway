@@ -9,18 +9,19 @@ builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange
 builder.Services.AddOcelot(builder.Configuration);
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
+    options.AddPolicy("AllowSpecificOrigin",
         policy =>
         {
-            policy.WithOrigins("http://cybertip.com")
+            policy.WithOrigins("http://cybertip.com/", "http://localhost:3000")
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();
+
         });
 });
 
 var app = builder.Build();
-
-// Use Ocelot middleware
+app.UseCors("AllowSpecificOrigin"); 
 await app.UseOcelot();
 
 app.Run();
