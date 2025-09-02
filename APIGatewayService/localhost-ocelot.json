@@ -1,5 +1,6 @@
 {
   "Routes": [
+    //Login
     {
       "DownstreamPathTemplate": "/api/Login/{everything}",
       "DownstreamScheme": "https",
@@ -11,17 +12,35 @@
       ],
       "UpstreamPathTemplate": "/api/Login/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post" ]
+      //"ForwardingHeaders": { "Cookie": "" }
     },
+
+    //Register
     {
       "DownstreamPathTemplate": "/api/Register/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { 
+        {
           "Host": "localhost",
           "Port": 44375
         }
       ],
       "UpstreamPathTemplate": "/api/Register/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+
+    //Session
+
+    {
+      "DownstreamPathTemplate": "/api/Session/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44375
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Session/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     }
   ],
