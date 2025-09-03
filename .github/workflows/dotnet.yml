@@ -33,7 +33,7 @@ jobs:
       - name: Stop IIS AppPool
         run: |
           Import-Module WebAdministration
-          Stop-WebAppPool -Name "APIGatewayAppPool"
+          Stop-WebAppPool -Name "CyberTIPAppPoll"
 
       - name: Deploy to IIS
         run: |
@@ -43,4 +43,4 @@ jobs:
       - name: Start IIS AppPool
         run: |
           Import-Module WebAdministration
-          Start-WebAppPool -Name "APIGatewayAppPool"
+          Start-WebAppPool -Name "CyberTIPAppPoll"
