@@ -8,29 +8,39 @@ on:
 
 jobs:
   build:
-
     runs-on: self-hosted
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
   publish:
-     needs: build
-     runs-on: self-hosted
-     steps:
-       - name: Publish
-         run: dotnet publish -c Release -r win-x64 --self-contained true -o ./publish
-       - name: Deploy to IIS
-         run: |
-          Remove-Item -Path "C:\Deployment\APIGateway\*" -Recurse -Force -ErrorAction Stop
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish
+        run: dotnet publish -c Release -r win-x64 --self-contained true -o ./publish
+
+      - name: Stop IIS AppPool
+        run: |
+          Import-Module WebAdministration
+          Stop-WebAppPool -Name "APIGatewayAppPool"
+
+      - name: Deploy to IIS
+        run: |
+          Remove-Item -Path "C:\Deployment\APIGateway\*" -Recurse -Force -ErrorAction SilentlyContinue
           Copy-Item -Path ".\publish\*" -Destination "C:\Deployment\APIGateway" -Recurse -Force
-          
+
+      - name: Start IIS AppPool
+        run: |
+          Import-Module WebAdministration
+          Start-WebAppPool -Name "APIGatewayAppPool"
