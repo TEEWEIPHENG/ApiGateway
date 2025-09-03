@@ -29,10 +29,10 @@
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
 
-    //Session
+    //Chat Service
 
     {
-      "DownstreamPathTemplate": "/api/Session/{everything}",
+      "DownstreamPathTemplate": "/api/Chat/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -40,7 +40,11 @@
           "Port": 44375
         }
       ],
-      "UpstreamPathTemplate": "/api/Session/{everything}",
+      "UpstreamPathTemplate": "/api/Chat/{everything}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      },
       "UpstreamHttpMethod": [ "Get", "Post" ]
     }
   ],

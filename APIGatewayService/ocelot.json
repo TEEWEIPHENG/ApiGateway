@@ -1,5 +1,6 @@
 {
   "Routes": [
+    //Login
     {
       "DownstreamPathTemplate": "/api/Login/{everything}",
       "DownstreamScheme": "http",
@@ -12,6 +13,8 @@
       "UpstreamPathTemplate": "/api/Login/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
+
+    //Register
     {
       "DownstreamPathTemplate": "/api/Register/{everything}",
       "DownstreamScheme": "http",
@@ -22,6 +25,25 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Register/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+
+    //Chat Service
+
+    {
+      "DownstreamPathTemplate": "/api/Chat/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Chat/{everything}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      },
       "UpstreamHttpMethod": [ "Get", "Post" ]
     }
   ],
