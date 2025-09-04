@@ -1,8 +1,9 @@
 {
   "Routes": [
-    //Login
+    //------------------------------------- Login -------------------------------------------
+    // # Process
     {
-      "DownstreamPathTemplate": "/api/Login/{everything}",
+      "DownstreamPathTemplate": "/api/Login/Process",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -10,11 +11,28 @@
           "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "/api/Login/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post" ]
+      "UpstreamPathTemplate": "/api/Login/Process",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    // # Logout
+    {
+      "DownstreamPathTemplate": "/api/Login/Logout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Login/Logout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      }
     },
 
-    //Register
+    //------------------------------------- Register -------------------------------------
     {
       "DownstreamPathTemplate": "/api/Register/{everything}",
       "DownstreamScheme": "http",

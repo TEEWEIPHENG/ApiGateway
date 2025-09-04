@@ -1,8 +1,9 @@
 {
   "Routes": [
-    //Login
+    //------------------------------------- Login -------------------------------------------
+    // # Ping
     {
-      "DownstreamPathTemplate": "/api/Login/{everything}",
+      "DownstreamPathTemplate": "/Login/Ping",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -10,12 +11,46 @@
           "Port": 44375
         }
       ],
-      "UpstreamPathTemplate": "/api/Login/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post" ]
+      "UpstreamPathTemplate": "/api/Login/Ping",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      }
+    },
+    // # Process
+    {
+      "DownstreamPathTemplate": "/api/Login/Process",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44375
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Login/Process",
+      "UpstreamHttpMethod": [ "POST" ]
       //"ForwardingHeaders": { "Cookie": "" }
     },
+    // # Logout
+    {
+      "DownstreamPathTemplate": "/api/Login/Logout",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44375
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Login/Logout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      }
+    },
 
-    //Register
+    //------------------------------------- Register -------------------------------------
     {
       "DownstreamPathTemplate": "/api/Register/{everything}",
       "DownstreamScheme": "https",
