@@ -30,7 +30,6 @@
       ],
       "UpstreamPathTemplate": "/api/Login/Process",
       "UpstreamHttpMethod": [ "POST" ]
-      //"ForwardingHeaders": { "Cookie": "" }
     },
     // # Logout
     {
@@ -50,6 +49,26 @@
       }
     },
 
+    // # GetUserInfo
+    {
+      "DownstreamPathTemplate": "/api/Login/GetUserInfo",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44375
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Login/GetUserInfo",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "x-user-id": "Claims[http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier] > value[0] > |",
+      }
+    },
     //------------------------------------- Register -------------------------------------
     {
       "DownstreamPathTemplate": "/api/Register/{everything}",
@@ -64,7 +83,7 @@
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
 
-    //Chat Service
+    //------------------------------------- Chat Service -------------------------------------
 
     {
       "DownstreamPathTemplate": "/api/Chat/{everything}",
@@ -72,7 +91,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44375
+          "Port": 44348
         }
       ],
       "UpstreamPathTemplate": "/api/Chat/{everything}",
@@ -81,7 +100,31 @@
         "AllowedScopes": []
       },
       "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+
+    //------------------------------------- Friend Service -------------------------------------
+    {
+      "DownstreamPathTemplate": "/api/Friend/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44348
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Friend/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "x-user-id": "Claims[http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier] > value[0] > |",
+        "x-user-name": "Claims[http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name] > value[0] > |",
+        "x-user-role": "Claims[http://schemas.microsoft.com/ws/2008/06/identity/claims/role] > value[0] > |"
+      }
     }
+
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5000"

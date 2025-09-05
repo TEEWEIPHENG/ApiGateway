@@ -1,3 +1,4 @@
+using APIGatewayService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
@@ -7,25 +8,30 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load Ocelot config
-builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-
-// Make sure the scheme names match ("JwtBearer")
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer("JwtBearer", options =>
+builder.Services.AddLogging(logging =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ClockSkew = TimeSpan.Zero, // no clock drift
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
+    logging.AddConsole();
+    logging.SetMinimumLevel(LogLevel.Debug);
 });
+// Make sure the scheme names match ("JwtBearer")
+builder.Services.AddAuthentication()
+    .AddJwtBearer("JwtBearer", options =>
+    {
+        options.RequireHttpsMetadata = false; // allow HTTP for local testing
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddAuthorization();
 
@@ -53,15 +59,8 @@ app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.Use(async (context, next) =>
-{
-    if (context.Request.Cookies.TryGetValue("AuthToken", out var token))
-    {
-        // inject Authorization header so Ocelot JWT middleware can validate it
-        context.Request.Headers["Authorization"] = $"Bearer {token}";
-    }
-    await next();
-});
+
+app.UseMiddleware<LogClaimsMiddleware>();
 
 await app.UseOcelot();
 
